@@ -1,7 +1,7 @@
 {
   "name": "domoticz-api",
-  "version": "1.0.6",
-  "description": "Advanced api based on your current Domoticz api.",
+  "version": "1.0.7",
+  "description": "Advanced api based on your current Domoticz api with well formated results ;)",
   "keywords": [
     "domoticz",
     "api"

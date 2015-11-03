@@ -1,6 +1,9 @@
 # JavaScript Domoticz API for Node.JS
 
 A Node.JS module, which provides a simplified object oriented wrapper for the Domoticz API.
+No properties which begin with uppercase or a multitude of parameters !
+
+This API can determine the specific type of your devices (WallPlug, PowerNode, ...).
 
 ## Installation
 
