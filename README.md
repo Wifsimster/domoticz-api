@@ -43,7 +43,7 @@ api.getDevices({
 });
 ```
 
-Get sunris and sunset :
+Get sunrise and sunset :
 ```javascript
 api.getSunriseSunset(function (error, data) {
     console.log(data);
