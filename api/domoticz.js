@@ -61,25 +61,31 @@ Domoticz.prototype._request = function (url, callback) {
 };
 
 /**
- * Lower case recursively the first two characters of each data property
+ * Lower case the first two characters of each data property and rename result by results
  * @param jsonData
  * @returns {{}}
  * @private
  */
 Domoticz.prototype._toLowerCaseResult = function (jsonData) {
-    var key, keys = Object.keys(jsonData);
-    var n = keys.length;
-    var newData = {};
-    var self = this;
-    while (n--) {
-        key = keys[n];
-        if (_.isArray(jsonData[key]) || _.isObject(jsonData[key])) {
-            newData[key.charAt(0).toLowerCase() + key.charAt(1).toLowerCase() + key.slice(2)] = self._toLowerCaseResult(jsonData[key]);
-        } else {
-            newData[key.charAt(0).toLowerCase() + key.charAt(1).toLowerCase() + key.slice(2)] = jsonData[key];
+    var newObj = {};
+    _.each(jsonData, function (value, name) {
+        newObj[name.charAt(0).toLowerCase() + name.charAt(1).toLowerCase() + name.slice(2)] = value;
+        if (name === "result") {
+            var newDevices = [];
+            // Each device in result
+            _.each(value, function (device) {
+                // Each property of a device
+                var newDevice = {};
+                _.each(device, function (deviceValue, deviceName) {
+                    newDevice[deviceName.charAt(0).toLowerCase() + deviceName.charAt(1).toLowerCase() + deviceName.slice(2)] = deviceValue;
+                });
+                newDevices.push(newDevice);
+            });
+            newObj['results'] = newDevices;
+            delete newObj.result;
         }
-    }
-    return newData;
+    });
+    return newObj;
 }
 
 /**
@@ -288,7 +294,7 @@ Domoticz.prototype.rebootSystem = function (callback) {
  * @param device
  * @returns {*}
  */
-Domoticz.getType = function (device) {
+Domoticz.prototype.getType = function (device) {
     if (_.isObject(device)) {
         if (device.hardwareName === "Motherboard") {
             return 'Usage';

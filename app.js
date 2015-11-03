@@ -11,18 +11,24 @@ api.getDevice({
     assert.equal(_.isObject(device), _.isObject({}), 'Test failed');
 });
 
-api.getDevices({
-    filter: 'all',
-    used: 'true',
-    order: 'Name'
-}, function (error, devices) {
-    assert.equal(_.isObject(devices), _.isObject({}), 'Test failed');
-});
-
 api.getSunriseSunset(function (error, data) {
     assert.equal(_.isObject(data), _.isObject({}), 'Test failed');
 });
 
 api.getScenesGroups(function (error, data) {
     assert.equal(_.isObject(data), _.isObject({}), 'Test failed');
+});
+
+api.getDevices({
+    filter: 'all',
+    used: 'true',
+    order: 'Name'
+}, function (error, data) {
+    assert.equal(_.isObject(data), _.isObject({}), 'Test failed');
+
+    data.results.map(function (device) {
+        api.getType(device, function (error, data) {
+            console.log(data)
+        });
+    })
 });
