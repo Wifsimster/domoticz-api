@@ -1,17 +1,25 @@
 {
   "name": "domoticz-api",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Advanced api based on your current Domoticz api.",
   "keywords": [
     "domoticz",
     "api"
   ],
+  "bugs": {
+    "url": "https://github.com/Wifsimster/domoticz-api/issues",
+    "email": "wifsimster@gmail.com"
+  },
   "author": "wifsimster <wifsimster@gmail.com>",
-  "license": "MIT",
+  "license": "SEE LICENSE IN <LICENSE>",
   "dependencies": {
     "extend": "^3.0.0",
     "lodash": "^3.10.1",
     "request": "^2.65.0",
     "urijs": "^1.16.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Wifsimster/domoticz-api"
   }
 }
