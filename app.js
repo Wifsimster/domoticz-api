@@ -27,6 +27,6 @@ api.getDevices({
     assert.equal(_.isObject(data), _.isObject({}), 'Test failed');
 
     data.results.map(function (device) {
-        console.log(api.getType(device));
+        console.log(api.getGenericType(device));
     })
 });

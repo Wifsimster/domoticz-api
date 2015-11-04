@@ -11,7 +11,7 @@ var Carboxymeter = require('./../devices/generics/sensors/carboxymeter');
 var Hygrometer = require('./../devices/generics/sensors/hygrometer');
 var Luxometer = require('./../devices/generics/sensors/luxometer');
 var Sonometer = require('./../devices/generics/sensors/sonometer');
-var Termometer = require('./../devices/generics/sensors/termometer');
+var Termometer = require('./../devices/generics/sensors/thermometer');
 
 // Utility
 var Consumption = require('./../devices/generics/utility/consumption');
@@ -290,41 +290,66 @@ Domoticz.prototype.rebootSystem = function (callback) {
 };
 
 /**
- * In development...
+ * Determine and return the generic type of a device
  * @param device
  * @returns {*}
  */
-Domoticz.prototype.getType = function (device) {
+Domoticz.prototype.getGenericType = function (device) {
     if (_.isObject(device)) {
         if (device.hardwareName === "Motherboard") {
-            return 'Usage';
+            return ['Usage'];
         }
         if (device.hardwareName === "Netatmo Weather Station") {
-            return 'NetatmoWeatherStation';
+            if (device.subType === 'Voltcraft CO-20') {
+                return ['Carboxymeter'];
+            }
+            if (device.subType === 'Sound Level') {
+                return ['Sonometer'];
+            }
+            if (device.subType === 'WTGR800') {
+                return ['Thermometer', 'Hygrometer'];
+            }
+            if (device.type === 'Temp + Humidity + Baro') {
+                return ['Thermometer', 'Hygrometer', 'Barometer'];
+            }
+            return ['NetatmoWeatherStation'];
         }
         if (device.type === "Temp") {
-            return 'Temperature';
+            return ['Temperature'];
         }
         if (device.type === "Lighting 1" || device.type === "Lighting 2") {
             if (device.subType === 'ZWave') {
                 if (device.switchType === 'Motion Sensor') {
-                    return 'FibaroMotionSensor';
+                    return ['MotionSensor'];
                 }
             }
-            return 'Switch';
+            return ['Switch'];
         }
         if (device.type === "General") {
             if (device.subType === "kWh") {
-                return 'Consumption'
+                return ['Consumption']
             }
-            if (device.subType === "Watt") {
-                return 'Power'
+        }
+        if (device.type === "Usage") {
+            if (device.subType === "Electric") {
+                return ['Power'];
+            }
+        }
+        if (device.type === "Lux") {
+            if (device.subType === "Lux") {
+                return ['Luxometer'];
             }
         }
 
-        // If 6 devices of type switch starting with the same id, it's a powernode
+        // If type not found return the device data
+        return device;
 
+        // FYI : If 6 devices of type switch starting with the same id, it's a powernode
     }
+}
+
+Domoticz.getSpecificType = function() {
+
 }
 
 /**

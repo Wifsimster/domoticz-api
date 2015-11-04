@@ -2,7 +2,7 @@
 
 var Device = require('../device');
 
-class Termometer extends Device.Device {
+class Thermometer extends Device.Device {
     constructor(value) {
         super();
         this.value = value;
@@ -10,4 +10,4 @@ class Termometer extends Device.Device {
     }
 }
 
-module.exports.Termometer = Termometer;
+module.exports.Thermometer = Thermometer;
