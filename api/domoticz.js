@@ -296,67 +296,83 @@ Domoticz.prototype.rebootSystem = function (callback) {
  */
 Domoticz.prototype.getGenericType = function (device) {
     if (_.isObject(device)) {
-        if (device.hardwareName === "Motherboard") {
-            return ['Usage'];
-        }
+        if (device.hardwareName === "Motherboard") return ['Usage'];
         if (device.hardwareName === "Netatmo Weather Station") {
-            if (device.subType === 'Voltcraft CO-20') {
-                return ['Carboxymeter'];
-            }
-            if (device.subType === 'Sound Level') {
-                return ['Sonometer'];
-            }
-            if (device.subType === 'WTGR800') {
-                return ['Thermometer', 'Hygrometer'];
-            }
-            if (device.type === 'Temp + Humidity + Baro') {
-                return ['Thermometer', 'Hygrometer', 'Barometer'];
-            }
+            if (device.subType === 'Voltcraft CO-20') return ['Carboxymeter'];
+            if (device.subType === 'Sound Level') return ['Sonometer'];
+            if (device.subType === 'WTGR800') return ['Thermometer', 'Hygrometer'];
+            if (device.type === 'Temp + Humidity + Baro') return ['Thermometer', 'Hygrometer', 'Barometer'];
             return ['NetatmoWeatherStation'];
         }
-        if (device.type === "Temp") {
-            return ['Temperature'];
-        }
+        if (device.type === "Temp") return ['Temperature'];
         if (device.type === "Lighting 1" || device.type === "Lighting 2") {
-            if (device.subType === 'ZWave') {
-                if (device.switchType === 'Motion Sensor') {
-                    return ['MotionSensor'];
-                }
-            }
+            if (device.subType === 'ZWave' && device.switchType === 'Motion Sensor') return ['MotionSensor'];
             return ['Switch'];
         }
-        if (device.type === "General") {
-            if (device.subType === "kWh") {
-                return ['Consumption']
-            }
-        }
-        if (device.type === "Usage") {
-            if (device.subType === "Electric") {
-                return ['Power'];
-            }
-        }
-        if (device.type === "Lux") {
-            if (device.subType === "Lux") {
-                return ['Luxometer'];
-            }
-        }
+        if (device.type === "General" && device.subType === "kWh") return ['Consumption'];
+        if (device.type === "Usage" && device.subType === "Electric") return ['Power'];
+        if (device.type === "Lux" && device.subType === "Lux") return ['Luxometer'];
 
         // If type not found return the device data
         return device;
-
-        // FYI : If 6 devices of type switch starting with the same id, it's a powernode
     }
 }
 
-Domoticz.getSpecificType = function() {
+/**
+ * Return an array of unique value
+ * @param array
+ * @returns {*}
+ * @private
+ */
+Domoticz._filter = function (array) {
+    return array.filter(function (elem, pos) {
+        return array.indexOf(elem) == pos;
+    });
+};
 
+/**
+ * Return an array of unique nodeIDs for OpenZWave devices
+ * @param devices
+ * @returns {*}
+ * @private
+ */
+Domoticz._getNodeIDs = function (devices) {
+    var nodeIds = [];
+    devices.forEach(function (device) {
+        if (device.subType === "ZWave") {
+            nodeIds.push(device.id.substring(0, 5));
+        }
+    });
+    return Domoticz._filter(nodeIds);
+}
+
+Domoticz._getNodeIdStart = function (device) {
+    if (device.subType === "ZWave") return device.id.substring(0, 5);
 }
 
 /**
- * Will extract potential device (ZWave devices) by similar id
+ * Get the number of siblings an OpenZWave has
+ * @param device
  */
-Domoticz.extractById = function () {
-
+Domoticz.prototype.getNumberSiblings = function (device, callback) {
+    if (_.isObject(device) && device.subType === "ZWave") {
+        //console.log(device.id)
+        this.getDevices({
+            filter: 'all',
+            used: 'true',
+            order: 'Name'
+        }, function (error, data) {
+            var count = 0;
+            data.results.map(function (_device) {
+                if (_device.subType === "ZWave")
+                    if (Domoticz._getNodeIdStart(device) === Domoticz._getNodeIdStart(_device))
+                        count++;
+            });
+            callback(count);
+        });
+    } else {
+        callback(0);
+    }
 }
 
 module.exports = Domoticz;
