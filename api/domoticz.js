@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 
 var request = require('request');
 var _ = require('lodash');
@@ -53,10 +53,20 @@ Domoticz.prototype._getUrl = function () {
  * @param callback
  * @private
  */
+ 
+//data = req.query.json;
+//var stringify = JSON.stringify(data)
+//content = JSON.parse(stringify);
+
 Domoticz.prototype._request = function (url, callback) {
     var self = this;
+   
+    
     request(url.toString(), function (error, res, data) {
-        callback(error, self._toLowerCaseResult(JSON.parse(data)));
+    //next line new
+   // var stringify = JSON.stringify(data)
+ //	callback(error, self._toLowerCaseResult(JSON.parse(stringify)));
+  	callback(error, self._toLowerCaseResult(JSON.parse(data)));
     });
 };
 
@@ -124,6 +134,22 @@ Domoticz.prototype.getDevices = function (_params, callback) {
 
     this._request(url, callback);
 };
+
+/*
+
+Params must be
+ *	`idx`: your device idx
+*	`value`: temp - accepts Float
+*/
+Domoticz.prototype.uTemp = function (params, callback) {
+        var url = this._getUrl();
+        url.addSearch("type", "command");
+        url.addSearch("param", 'udevice');
+        url.addSearch("idx", params.idx);
+        url.addSearch("nvalue", '0');
+        url.addSearch("svalue", params.value)
+        this._request(url, callback);
+}
 
 /**
  * Get sunrise and sunset times
