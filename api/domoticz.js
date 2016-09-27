@@ -222,7 +222,7 @@ Domoticz.prototype.changeSceneState = function (params, callback) {
 Domoticz.prototype.getVariable = function (param, callback) {
     var url = this._getUrl();
     url.addSearch("type", "command");
-    url.addSearch("param", 'getuservariables');
+    url.addSearch("param", 'getuservariable');
     url.addSearch("idx", param.idx);
     this._request(url, callback);
 };
