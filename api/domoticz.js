@@ -53,15 +53,15 @@ Domoticz.prototype._getUrl = function () {
  * @param callback
  * @private
  */
- 
+
 //data = req.query.json;
 //var stringify = JSON.stringify(data)
 //content = JSON.parse(stringify);
 
 Domoticz.prototype._request = function (url, callback) {
     var self = this;
-   
-    
+
+
     request(url.toString(), function (error, res, data) {
     //next line new
    // var stringify = JSON.stringify(data)
@@ -312,6 +312,16 @@ Domoticz.prototype.rebootSystem = function (callback) {
     var url = this._getUrl();
     url.addSearch("type", "command");
     url.addSearch("param", 'system_reboot');
+    this._request(url, callback);
+};
+
+/**
+ * Get all plans
+ * @param callback
+ */
+Domoticz.prototype.getPlans = function (callback) {
+    var url = this._getUrl();
+    url.addSearch("type", "plans");
     this._request(url, callback);
 };
 
