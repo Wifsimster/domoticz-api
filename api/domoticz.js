@@ -131,7 +131,7 @@ Domoticz.prototype.getDevices = function (_params, callback) {
     params["filter"] != undefined && _.isString(params["filter"]) ? _.contains(['all', 'light', 'weather', 'temperature', 'utility'], params["filter"]) ? url.addSearch("filter", params["filter"]) : this : this;
     params["used"] != undefined && _.isBoolean(params["used"]) ? params["used"] ? url.addSearch("used", 'true') : url.addSearch("used", 'false') : this;
     params["order"] != undefined && _.isString(params["order"]) ? url.addSearch("order", params["order"]) : this;
-    params["plan"] != undefined && _.isNumeric(params["plan"]) ? url.addSearch("plan", params["plan"]) : this;
+    params["plan"] != undefined && _.isNumber(params["plan"]) ? url.addSearch("plan", params["plan"]) : this;
 
     this._request(url, callback);
 };
