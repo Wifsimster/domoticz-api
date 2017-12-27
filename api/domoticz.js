@@ -53,15 +53,15 @@ Domoticz.prototype._getUrl = function () {
  * @param callback
  * @private
  */
- 
+
 //data = req.query.json;
 //var stringify = JSON.stringify(data)
 //content = JSON.parse(stringify);
 
 Domoticz.prototype._request = function (url, callback) {
     var self = this;
-   
-    
+
+
     request(url.toString(), function (error, res, data) {
     //next line new
    // var stringify = JSON.stringify(data)
@@ -131,6 +131,7 @@ Domoticz.prototype.getDevices = function (_params, callback) {
     params["filter"] != undefined && _.isString(params["filter"]) ? _.contains(['all', 'light', 'weather', 'temperature', 'utility'], params["filter"]) ? url.addSearch("filter", params["filter"]) : this : this;
     params["used"] != undefined && _.isBoolean(params["used"]) ? params["used"] ? url.addSearch("used", 'true') : url.addSearch("used", 'false') : this;
     params["order"] != undefined && _.isString(params["order"]) ? url.addSearch("order", params["order"]) : this;
+    params["plan"] != undefined && _.isNumber(params["plan"]) ? url.addSearch("plan", params["plan"]) : this;
 
     this._request(url, callback);
 };
@@ -312,6 +313,16 @@ Domoticz.prototype.rebootSystem = function (callback) {
     var url = this._getUrl();
     url.addSearch("type", "command");
     url.addSearch("param", 'system_reboot');
+    this._request(url, callback);
+};
+
+/**
+ * Get all plans
+ * @param callback
+ */
+Domoticz.prototype.getPlans = function (callback) {
+    var url = this._getUrl();
+    url.addSearch("type", "plans");
     this._request(url, callback);
 };
 
